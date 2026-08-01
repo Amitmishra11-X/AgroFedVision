@@ -415,6 +415,112 @@ def predict_and_recommend(
         uav_result=uav_context
 
     )
+    # =====================================================
+# Explainable AI
+# =====================================================
+
+    explainer = ExplainableFusion()
+    ps = result["plant_statistics"]
+    
+    explainer.add_module(
+
+        name="Image",
+
+        score=fusion.get("image_score"),
+
+        confidence=ps["reliability_score"],
+
+        summary=(
+            f"{ps['moderate']} Moderate Risk leaves, "
+            f"{ps['high']} High Risk leaves detected."
+    ),
+
+        evidence={
+
+    "healthy": ps["healthy"],
+
+    "moderate": ps["moderate"],
+
+    "high": ps["high"],
+
+    "majority_class": ps["majority_class"],
+
+    "severity_percentage": ps["severity_percentage"],
+
+    "health_index": ps["health_index"],
+
+    "mixed_disease": ps["mixed_disease"]
+},     recommendation=(
+            "Inspect symptomatic leaves "
+            "and monitor disease progression."
+    )
+)
+    if sensor_context:
+
+        analysis = sensor_context.get("analysis", {})
+
+        explainer.add_module(
+
+            name="Sensor",
+
+            score=fusion.get("sensor_score"),
+
+            confidence=None,
+
+            summary=(
+                f"Sensor Health Score "
+                f"{analysis.get('sensor_health_score','N/A')}"
+            ),
+
+            evidence=analysis,
+
+            recommendation=(
+                "Maintain balanced irrigation "
+                "and nutrient levels."
+            )
+        )
+
+    if uav_context:
+
+        us = uav_context["uav_statistics"]
+
+        explainer.add_module(
+
+            name="UAV",
+
+            score=fusion.get("uav_score"),
+
+            confidence=None,
+
+            summary=(
+                f"{us['total_images']} captures analysed."
+            ),
+
+            evidence={
+
+                "Average NDVI": us["ndvi_mean"],
+
+                "Average NDRE": us["ndre_mean"],
+
+                "Best Capture": us["best_image"],
+
+                "NDVI Std": us["ndvi_std"]
+            },
+
+            recommendation=(
+                "Inspect regions having lower vegetation vigor."
+            )
+        )
+    explainability = explainer.generate(
+    
+        overall_status=fusion["overall_status"],
+
+        risk_level=fusion["risk_level"],
+
+        health_score=fusion["overall_health_score"]
+
+)
+    save_explainability(explainability)
 
     # --------------------------------------------------
     # Grad-CAM
@@ -454,6 +560,8 @@ def predict_and_recommend(
         
         
         "plant_statistics": result["plant_statistics"],
+        
+        "explainability": explainability,
 
         "prediction":
             result["predicted_class"],
@@ -482,6 +590,8 @@ def predict_and_recommend(
 
         "gradcam":
             gradcam_path
+        
+        
 
     }
 
@@ -491,6 +601,43 @@ def predict_and_recommend(
 # ==========================================================
 
 def print_report(report):
+    """Print a structured prediction report to stdout."""
+
+    if report.get("explainability"):
+
+        exp = report["explainability"]
+
+        print("\n")
+        print("=" * 60)
+        print("Explainable AI Report")
+        print("=" * 60)
+
+        print(f"Overall Status : {exp['overall_status']}")
+        print(f"Risk Level     : {exp['risk_level']}")
+        print(f"Health Score   : {exp['health_score']:.2f}/100")
+
+        for module in exp["modules"]:
+
+            print("\n----------------------------------------")
+            print(module["module"])
+            print("----------------------------------------")
+
+        if module["score"] is not None:
+            print(f"Score        : {module['score']:.2f}")
+
+        if module["confidence"] is not None:
+            print(f"Confidence   : {module['confidence']:.2%}")
+
+        print(f"Summary      : {module['summary']}")
+
+        print("\nEvidence")
+
+        for k, v in module["evidence"].items():
+            print(f"  {k:<20}: {v}")
+
+        if module["recommendation"]:
+            print("\nRecommendation")
+            print(f"  • {module['recommendation']}")
 
     print("\n" + "=" * 60)
     print("AgroFedVision Prediction Report")
@@ -515,12 +662,12 @@ def print_report(report):
     print(f"Reliability Score  : {ps['reliability_score']:.2%}")
     print(f"Mixed Disease      : {ps['mixed_disease']}")
     print(f"Confidence : {report['confidence']:.2%}")
+
     # --------------------------------------------------
 # Per Image Results
 # --------------------------------------------------
 
     if report.get("per_image_results"):
-
         print("\nPer Image Results")
         print("-" * 40)
 
@@ -535,7 +682,6 @@ def print_report(report):
     print("-"*40)
 
     print(f"Healthy Leaves        : {ps['healthy']}")
-
     print(f"Moderate Risk Leaves  : {ps['moderate']}")
 
     print(f"High Risk Leaves      : {ps['high']}")
@@ -616,40 +762,30 @@ def print_report(report):
         print(f"NDRE Mean     : {u['NDRE_Mean']:.3f}")
         print(f"NDRE Std      : {u['NDRE_Std']:.3f}")
         print(f"Field Status  : {u['field_health_flag']}")
-    if "uav_statistics" in u:
 
-        us = u["uav_statistics"]
+        us = u.get("uav_statistics")
+        if us is not None:
+            print("\nField Statistics")
+            print("-" * 40)
+            print(f"Captures Processed : {us['total_images']}")
+            print(f"Best Capture       : {us['best_image']}")
+            print(f"Average NDVI       : {us['ndvi_mean']:.3f}")
+            print(f"NDVI Std           : {us['ndvi_std']:.3f}")
+            print(f"Minimum NDVI       : {us['ndvi_min']:.3f}")
+            print(f"Maximum NDVI       : {us['ndvi_max']:.3f}")
 
-        print("\nField Statistics")
-        print("-" * 40)
-
-        print(f"Captures Processed : {us['total_images']}")
-
-        print(f"Best Capture       : {us['best_image']}")
-
-        print(f"Average NDVI       : {us['ndvi_mean']:.3f}")
-
-        print(f"NDVI Std           : {us['ndvi_std']:.3f}")
-
-        print(f"Minimum NDVI       : {us['ndvi_min']:.3f}")
-
-        print(f"Maximum NDVI       : {us['ndvi_max']:.3f}")
-
-    if "ndre_mean" in us:
-        print(f"Average NDRE       : {us['ndre_mean']:.3f}")
+            if "ndre_mean" in us:
+                print(f"Average NDRE       : {us['ndre_mean']:.3f}")
 
     # --------------------------------------------------
     # Sensor Analysis
     # --------------------------------------------------
-
     if report.get("sensor_context"):
-
         s = report["sensor_context"]
         a = s["analysis"]
 
         print("\nSensor Analysis")
         print("-" * 40)
-
         print(f"Predicted Class : {s['predicted_class']}")
         print(f"Confidence      : {s['confidence']:.2%}")
 
@@ -663,11 +799,9 @@ def print_report(report):
         print(f" Humidity    : {a['humidity_status']}")
 
         print(f"\nSensor Health Score : {a['sensor_health_score']}/100")
-
         print("\nRecommendations")
 
         for item in a["fertilizer"]:
-
             print(f"  • {item}")
 
         print(f"  • {a['irrigation']}")
@@ -675,9 +809,7 @@ def print_report(report):
     # --------------------------------------------------
     # Decision Fusion
     # --------------------------------------------------
-
     if report.get("fusion"):
-
         f = report["fusion"]
 
         print("\n" + "=" * 60)
@@ -705,17 +837,14 @@ def print_report(report):
         print("-" * 40)
 
         for name, value in f["weights"].items():
-
             print(f"{name.capitalize():10s}: {value * 100:.1f}%")
 
         print("\nFinal Recommendations")
         print("-" * 40)
 
         for rec in f["recommendations"]:
-
             print(f"  • {rec}")
 
-    print("\n" + "=" * 60)
 # ==========================================================
 # MAIN
 # ==========================================================
