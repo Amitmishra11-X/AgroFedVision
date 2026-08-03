@@ -1,188 +1,421 @@
 """
 ============================================================
-AgroFedVision Crop Registry
+AgroFedVision Research Framework
+Configuration File
 ============================================================
-One place to manage every dataset path.
-Change only this file when moving to another PC.
+
+Author : Amit Mishra
+Project : AgroFedVision
+
+Only modify this file when changing
+
+1. Dataset
+2. Training Parameters
+3. Paths
+4. Models
+5. Output Directories
+
 ============================================================
 """
 
-from pathlib import Path
+import os
+import tensorflow as tf
 
 # ==========================================================
-# GUAVA
+# PROJECT
 # ==========================================================
 
-GUAVA = {
+PROJECT_NAME = "AgroFedVision"
 
-    "name": "guava",
+VERSION = "2.0"
 
-    "train": Path(r"D:\Download1\archive (5)\CNN256\CNN256\train"),
+SEED = 42
 
-    "valid": Path(r"D:\Download1\archive (5)\CNN256\CNN256\valid"),
+# ==========================================================
+# CURRENT DATASET
+# ==========================================================
 
-    "test": Path(r"D:\Download1\archive (5)\CNN256\CNN256\test"),
+CURRENT_DATASET = "guava"
 
-    "num_classes": 9,
+# Available:
+#
+# guava
+# maize
+# paddy
 
-    "image_size": 224
+# ==========================================================
+# DATASET REGISTRY
+# ==========================================================
+
+DATASETS = {
+
+    "guava": {
+
+        "train": r"D:\Download1\archive (5)\CNN256\CNN256\train",
+
+        "valid": r"D:\Download1\archive (5)\CNN256\CNN256\valid",
+
+        "test": r"D:\Download1\archive (5)\CNN256\CNN256\test",
+
+        "num_classes": 9,
+
+        "image_size": 224,
+
+        "models": [
+
+            "cnn",
+
+
+
+        ]
+
+    },
+
+    "maize": {
+
+        "train": r"D:\Download1\archive (1)\Corn Disease detection",
+
+        "valid": None,
+
+        "test": None,
+
+        "num_classes": 2,
+
+        "image_size": 224,
+
+        "models": [
+
+            "cnn",
+
+            "mobilenet",
+
+            "vgg16",
+
+            "resnet50",
+
+            "xception",
+
+            "efficientnet",
+
+            "densenet"
+
+        ]
+
+    },
+
+    "paddy": {
+
+        "train": r"D:\Download1\archive\paddy-disease-classification\train_images",
+
+        "valid": None,
+
+        "test": r"D:\Download1\archive\paddy-disease-classification\test_images",
+
+        "num_classes": 10,
+
+        "image_size": 224,
+
+        "models": [
+
+            "cnn",
+
+            "mobilenet",
+
+            "vgg16",
+
+            "resnet50",
+
+            "xception",
+
+            "efficientnet",
+
+            "densenet"
+
+        ]
+
+    }
 
 }
-
-
-# ==========================================================
-# MAIZE / CORN
-# ==========================================================
-
-MAIZE = {
-
-    "name": "maize",
-
-    "train": Path(r"D:\Download1\archive (1)\Corn Disease detection"),
-
-    "valid": None,
-
-    "test": None,
-
-    "class_names": [
-
-        "Healthy corn",
-
-        "Infected"
-
-    ],
-
-    "num_classes": 2,
-
-    "image_size": 224
-
-}
-
-
-# ==========================================================
-# PADDY
-# ==========================================================
-
-PADDY = {
-
-    "name": "paddy",
-
-    "train": Path(r"D:\Download1\archive\paddy-disease-classification\train_images"),
-
-    "valid": None,
-
-    "test": Path(r"D:\Download1\archive\paddy-disease-classification\test_images"),
-
-    "num_classes": 10,
-
-    "image_size": 224
-
-}
-
 
 # ==========================================================
 # SENSOR DATASETS
 # ==========================================================
 
-SENSOR = {
+SENSOR_DATASET = {
 
     "new_dataset":
 
-        Path(r"D:\Download1\archive (3)\sensor_Crop_Dataset (1).csv"),
+        r"D:\Download1\archive (3)\sensor_Crop_Dataset (1).csv",
 
     "old_dataset":
 
-        Path(r"D:\Download1\Crop_Classification_dataset.xlsx")
+        r"D:\Download1\Crop_Classification_dataset.xlsx"
 
 }
-
 
 # ==========================================================
 # UAV DATASET
 # ==========================================================
 
-UAV = {
+UAV_DATASET = {
 
     "folder":
 
-        Path(
-            r"D:\Download1\Agriculture_Multispectral_Aerial"
-            r"\Agriculture_Multispectral_Aerial"
-            r"\Agri\Agri\Maize"
-            r"\maize_season4_RededgeMultispectral_20200125_10m_flight1\000"
-        ),
+        r"D:\Download1\Agriculture_Multispectral_Aerial"
+        r"\Agriculture_Multispectral_Aerial"
+        r"\Agri\Agri\Maize"
+        r"\maize_season4_RededgeMultispectral_20200125_10m_flight1\000",
 
     "feature_csv":
 
-        Path(
-            r"C:\Users\Lenovo\Desktop\AgroFedVision\uav_features.csv"
-        )
+        r"C:\Users\Lenovo\Desktop\AgroFedVision\uav_features.csv"
 
 }
 
-
 # ==========================================================
-# MASTER REGISTRY
-# ==========================================================
-
-CROP_REGISTRY = {
-
-    "guava": GUAVA,
-
-    "maize": MAIZE,
-
-    "paddy": PADDY
-
-}
-
-
-# ==========================================================
-# FUNCTIONS
+# ACTIVE DATASET
 # ==========================================================
 
-def get_crop(name):
+CURRENT = DATASETS[CURRENT_DATASET]
 
-    name = name.lower()
+TRAIN_DIR = CURRENT["train"]
 
-    if name not in CROP_REGISTRY:
+VAL_DIR = CURRENT["valid"]
 
-        raise ValueError(f"Unknown crop : {name}")
+TEST_DIR = CURRENT["test"]
 
-    return CROP_REGISTRY[name]
+NUM_CLASSES = CURRENT["num_classes"]
 
+IMAGE_SIZE = CURRENT["image_size"]
 
-def get_sensor():
+MODELS = CURRENT["models"]
 
-    return SENSOR
+# ==========================================================
+# TRAINING
+# ==========================================================
 
+EPOCHS = 50
 
-def get_uav():
+BATCH_SIZE = 32
 
-    return UAV
+LEARNING_RATE = 1e-4
 
+OPTIMIZER = "adam"
 
-def show_registry():
+LOSS = "sparse_categorical_crossentropy"
+
+METRICS = [
+
+    "accuracy"
+
+]
+
+# ==========================================================
+# DATASET
+# ==========================================================
+
+SHUFFLE = True
+
+BUFFER_SIZE = 1000
+
+VALIDATION_SPLIT = 0.10
+
+TEST_SPLIT = 0.20
+
+AUTO_CREATE_VALIDATION = True
+
+AUTO_SPLIT_DATASET = True
+
+# ==========================================================
+# DUPLICATE CHECK
+# ==========================================================
+
+CHECK_DUPLICATES = True
+
+REMOVE_DUPLICATES = True
+
+# ==========================================================
+# DATA AUGMENTATION
+# ==========================================================
+
+USE_AUGMENTATION = True
+
+ROTATION = 20
+
+WIDTH_SHIFT = 0.20
+
+HEIGHT_SHIFT = 0.20
+
+ZOOM = 0.20
+
+SHEAR = 0.20
+
+HORIZONTAL_FLIP = True
+
+VERTICAL_FLIP = False
+
+# ==========================================================
+# CALLBACKS
+# ==========================================================
+
+EARLY_STOPPING = True
+
+PATIENCE = 10
+
+SAVE_BEST_ONLY = True
+
+REDUCE_LR = True
+
+REDUCE_FACTOR = 0.2
+
+REDUCE_PATIENCE = 5
+
+# ==========================================================
+# OUTPUTS
+# ==========================================================
+
+OUTPUT_DIR = "outputs"
+
+MODEL_DIR = os.path.join(
+
+    OUTPUT_DIR,
+
+    CURRENT_DATASET,
+
+    "models"
+
+)
+
+REPORT_DIR = os.path.join(
+
+    OUTPUT_DIR,
+
+    CURRENT_DATASET,
+
+    "reports"
+
+)
+
+PLOT_DIR = os.path.join(
+
+    OUTPUT_DIR,
+
+    CURRENT_DATASET,
+
+    "plots"
+
+)
+
+CHECKPOINT_DIR = os.path.join(
+
+    OUTPUT_DIR,
+
+    CURRENT_DATASET,
+
+    "checkpoints"
+
+)
+
+BENCHMARK_DIR = os.path.join(
+
+    OUTPUT_DIR,
+
+    CURRENT_DATASET,
+
+    "benchmark"
+
+)
+
+LOG_DIR = os.path.join(
+
+    OUTPUT_DIR,
+
+    CURRENT_DATASET,
+
+    "logs"
+
+)
+
+# ==========================================================
+# CREATE OUTPUT DIRECTORIES
+# ==========================================================
+
+for folder in [
+
+    OUTPUT_DIR,
+
+    MODEL_DIR,
+
+    REPORT_DIR,
+
+    PLOT_DIR,
+
+    CHECKPOINT_DIR,
+
+    BENCHMARK_DIR,
+
+    LOG_DIR
+
+]:
+
+    os.makedirs(folder, exist_ok=True)
+
+# ==========================================================
+# GPU
+# ==========================================================
+
+gpus = tf.config.list_physical_devices("GPU")
+
+if gpus:
+
+    try:
+
+        for gpu in gpus:
+
+            tf.config.experimental.set_memory_growth(
+
+                gpu,
+
+                True
+
+            )
+
+    except Exception:
+
+        pass
+
+# ==========================================================
+# SHOW CONFIGURATION
+# ==========================================================
+
+def show_config():
 
     print("\n")
 
     print("=" * 60)
 
-    print("AgroFedVision Crop Registry")
+    print("AgroFedVision Configuration")
 
     print("=" * 60)
 
-    for crop, info in CROP_REGISTRY.items():
+    print(f"Dataset        : {CURRENT_DATASET}")
 
-        print(f"\n{crop.upper()}")
+    print(f"Train Path     : {TRAIN_DIR}")
 
-        print("Train :", info["train"])
+    print(f"Validation     : {VAL_DIR}")
 
-        print("Valid :", info["valid"])
+    print(f"Test Path      : {TEST_DIR}")
 
-        print("Test  :", info["test"])
+    print(f"Classes        : {NUM_CLASSES}")
 
-    print("\nSensor Dataset :", SENSOR["new_dataset"])
+    print(f"Image Size     : {IMAGE_SIZE}")
 
-    print("Old Sensor     :", SENSOR["old_dataset"])
+    print(f"Epochs         : {EPOCHS}")
 
-    print("UAV Folder     :", UAV["folder"])
+    print(f"Batch Size     : {BATCH_SIZE}")
+
+    print(f"Learning Rate  : {LEARNING_RATE}")
+
+    print(f"Models         : {', '.join(MODELS)}")
+
+    print("=" * 60)
