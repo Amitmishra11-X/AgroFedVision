@@ -38,7 +38,7 @@ def main():
 
     print("Running preprocessing...")
 
-    run_preprocessing(TRAIN_DIR)
+    clean_train = run_preprocessing(TRAIN_DIR)
 
     # --------------------------------------------------
     # Load Dataset
@@ -46,35 +46,57 @@ def main():
 
     print("\nLoading Dataset...")
 
-    train_ds, class_names = load_dataset(TRAIN_DIR)
+    train_ds, class_names = load_dataset(clean_train)
 
-    if VAL_DIR is None:
+    # --------------------------------------------------
+    # Validation Dataset
+    # --------------------------------------------------
 
-        val_ds = None
+    clean_val = Path(clean_train).parent / "valid"
 
-    else:
+    if clean_val.exists():
 
         val_ds, _ = load_dataset(
 
-            VAL_DIR,
+            str(clean_val),
 
             shuffle=False
 
         )
-
-    if TEST_DIR is None:
-
-        test_ds = None
 
     else:
 
+        val_ds = None
+
+
+    # --------------------------------------------------
+    # Test Dataset
+    # --------------------------------------------------
+
+    clean_test = Path(clean_train).parent / "test"
+
+    if clean_test.exists():
+
         test_ds, _ = load_dataset(
 
-            TEST_DIR,
+            str(clean_test),
 
             shuffle=False
 
         )
+
+    else:
+
+        test_ds = None
+
+
+    print()
+
+    print("Classes")
+
+    for i, c in enumerate(class_names):
+
+        print(i, "->", c)
 
     print()
 
@@ -128,7 +150,7 @@ def main():
             class_names=class_names
 
         )
-
+        
         history = trainer.train()
 
         metrics = trainer.evaluate()

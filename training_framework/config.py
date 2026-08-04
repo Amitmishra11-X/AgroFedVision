@@ -196,6 +196,8 @@ MODELS = CURRENT["models"]
 
 EPOCHS = 50
 
+RESUME_TRAINING = True
+
 BATCH_SIZE = 32
 
 LEARNING_RATE = 1e-4
@@ -220,11 +222,18 @@ BUFFER_SIZE = 1000
 
 VALIDATION_SPLIT = 0.10
 
-TEST_SPLIT = 0.20
+TEST_SPLIT = 0.10
 
 AUTO_CREATE_VALIDATION = True
 
 AUTO_SPLIT_DATASET = True
+# ==========================================================
+# PREPROCESSING
+# ==========================================================
+
+USE_DUPLICATE_REMOVER = True
+
+USE_DATASET_SPLITTER = True
 
 # ==========================================================
 # DUPLICATE CHECK
@@ -233,6 +242,8 @@ AUTO_SPLIT_DATASET = True
 CHECK_DUPLICATES = True
 
 REMOVE_DUPLICATES = True
+
+OVERWRITE_CLEAN_DATASET = False
 
 # ==========================================================
 # DATA AUGMENTATION
@@ -334,8 +345,17 @@ LOG_DIR = os.path.join(
 
     "logs"
 
-)
 
+)
+HISTORY_DIR = os.path.join(
+
+    OUTPUT_DIR,
+
+    CURRENT_DATASET,
+
+    "history"
+
+)
 # ==========================================================
 # CREATE OUTPUT DIRECTORIES
 # ==========================================================
@@ -354,7 +374,9 @@ for folder in [
 
     BENCHMARK_DIR,
 
-    LOG_DIR
+    LOG_DIR,
+
+    HISTORY_DIR
 
 ]:
 

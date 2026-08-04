@@ -7,17 +7,17 @@ Universal Research Trainer
 Features
 --------
 ✓ Automatic Compile
-✓ Automatic Training
+✓ Resume Training
+✓ Custom Checkpoint
 ✓ Automatic Evaluation
 ✓ Automatic Saving
-✓ Benchmark Ready
-✓ TensorBoard
-✓ CSV Logger
-✓ Future Fine-Tuning
+✓ Fine-Tuning
 ============================================================
 """
 
+import json
 import numpy as np
+import pandas as pd
 import tensorflow as tf
 
 from pathlib import Path
@@ -31,6 +31,10 @@ from config import *
 
 
 class ResearchTrainer:
+
+    # =====================================================
+    # Constructor
+    # =====================================================
 
     def __init__(
 
@@ -64,25 +68,94 @@ class ResearchTrainer:
 
         self.history = None
 
-        # Research Metrics Engine
         self.metric_engine = ResearchMetrics(
 
             self.class_names
 
         )
-# =====================================================
-# Compile Model
-# =====================================================
 
     # =====================================================
+    # Resume Training
+    # =====================================================
+
+    def resume_training(self):
+
+        if not RESUME_TRAINING:
+
+            return 0
+
+        checkpoint = Path(
+
+            CHECKPOINT_DIR
+
+        ) / f"{self.model_name}.weights.h5"
+
+        state_file = Path(
+
+            CHECKPOINT_DIR
+
+        ) / f"{self.model_name}_state.json"
+
+        initial_epoch = 0
+
+        if checkpoint.exists():
+
+            print()
+
+            print("=" * 60)
+            print("Resume Training")
+            print("=" * 60)
+            print(checkpoint)
+            print("=" * 60)
+
+            self.model.load_weights(
+
+                str(checkpoint)
+
+            )
+
+            print("Weights Loaded Successfully")
+
+            if state_file.exists():
+
+                with open(
+
+                    state_file,
+
+                    "r"
+
+                ) as f:
+
+                    state = json.load(f)
+
+                initial_epoch = state.get(
+
+                    "epoch",
+
+                    0
+
+                )
+
+                print()
+
+                print(f"Last Completed Epoch : {initial_epoch}")
+                print(f"Resume From Epoch    : {initial_epoch + 1}")
+
+        else:
+
+            print()
+
+            print("=" * 60)
+            print("No Previous Checkpoint Found")
+            print("Starting Fresh Training")
+            print("=" * 60)
+
+        return initial_epoch
+        # =====================================================
     # Compile Model
     # =====================================================
 
     def compile(self):
-
-        """
-        Compile the selected model.
-        """
 
         if OPTIMIZER.lower() == "adam":
 
@@ -106,7 +179,7 @@ class ResearchTrainer:
 
             raise ValueError(
 
-                f"Unknown Optimizer : {OPTIMIZER}"
+                f"Unsupported Optimizer : {OPTIMIZER}"
 
             )
 
@@ -123,35 +196,32 @@ class ResearchTrainer:
         print()
 
         print("=" * 60)
-
         print("Model Compiled")
-
+        print("=" * 60)
+        print(f"Model         : {self.model_name}")
+        print(f"Optimizer     : {OPTIMIZER}")
+        print(f"Learning Rate : {LEARNING_RATE}")
+        print(f"Epochs        : {EPOCHS}")
         print("=" * 60)
 
-        print(f"Model       : {self.model_name}")
 
-        print(f"Optimizer   : {OPTIMIZER}")
-
-        print(f"Loss        : {LOSS}")
-
-        print(f"LearningRate: {LEARNING_RATE}")
-
-        print(f"Epochs      : {EPOCHS}")
-
-        print(f"Batch Size  : {BATCH_SIZE}")
-
-        print("=" * 60)
-            # =====================================================
+    # =====================================================
     # Train Model
     # =====================================================
 
     def train(self):
 
         # ----------------------------------------
-        # Compile Model
+        # Compile
         # ----------------------------------------
 
         self.compile()
+
+        # ----------------------------------------
+        # Resume
+        # ----------------------------------------
+
+        initial_epoch = self.resume_training()
 
         # ----------------------------------------
         # Callbacks
@@ -166,17 +236,11 @@ class ResearchTrainer:
         print()
 
         print("=" * 60)
-
         print("Training Started")
-
         print("=" * 60)
-
-        print(f"Model   : {self.model_name}")
-
-        print(f"Epochs  : {EPOCHS}")
-
-        print(f"Batch   : {BATCH_SIZE}")
-
+        print(f"Model         : {self.model_name}")
+        print(f"Start Epoch   : {initial_epoch}")
+        print(f"End Epoch     : {EPOCHS}")
         print("=" * 60)
 
         # ----------------------------------------
@@ -191,6 +255,8 @@ class ResearchTrainer:
 
             epochs=EPOCHS,
 
+            initial_epoch=initial_epoch,
+
             callbacks=callbacks,
 
             verbose=1
@@ -198,14 +264,10 @@ class ResearchTrainer:
         )
 
         # ----------------------------------------
-        # Create Model Folder
+        # Save Final Weights
         # ----------------------------------------
 
-        model_folder = Path(
-
-            MODEL_DIR
-
-        ) / self.model_name
+        model_folder = Path(MODEL_DIR) / self.model_name
 
         model_folder.mkdir(
 
@@ -215,28 +277,20 @@ class ResearchTrainer:
 
         )
 
-        # ----------------------------------------
-        # Save Final Model
-        # ----------------------------------------
+        final_weights = model_folder / "final.weights.h5"
 
-        model_path = model_folder / f"{self.model_name}.keras"
+        self.model.save_weights(
 
-        self.model.save(
-
-            model_path
+            str(final_weights)
 
         )
 
         print()
 
         print("=" * 60)
-
         print("Training Completed")
-
         print("=" * 60)
-
-        print(f"Model Saved : {model_path}")
-
+        print(f"Weights Saved : {final_weights}")
         print("=" * 60)
 
         return self.history
@@ -249,14 +303,8 @@ class ResearchTrainer:
         print()
 
         print("=" * 60)
-
         print("Research Evaluation")
-
         print("=" * 60)
-
-        # ----------------------------------------
-        # Select Dataset
-        # ----------------------------------------
 
         if self.test_ds is not None:
 
@@ -270,13 +318,9 @@ class ResearchTrainer:
 
             raise ValueError(
 
-                "No validation or test dataset available."
+                "No validation/test dataset found."
 
             )
-
-        # ----------------------------------------
-        # Predict
-        # ----------------------------------------
 
         predictions = self.model.predict(
 
@@ -296,10 +340,6 @@ class ResearchTrainer:
 
         )
 
-        # ----------------------------------------
-        # Ground Truth
-        # ----------------------------------------
-
         y_true = []
 
         for _, labels in dataset:
@@ -316,10 +356,6 @@ class ResearchTrainer:
 
         )
 
-        # ----------------------------------------
-        # Output Folder
-        # ----------------------------------------
-
         report_folder = Path(
 
             REPORT_DIR
@@ -333,10 +369,6 @@ class ResearchTrainer:
             exist_ok=True
 
         )
-
-        # ----------------------------------------
-        # Research Metrics
-        # ----------------------------------------
 
         metrics, cm, report = self.metric_engine.evaluate(
 
@@ -353,25 +385,25 @@ class ResearchTrainer:
         print()
 
         print("=" * 60)
-
         print("Evaluation Results")
-
         print("=" * 60)
 
-        for k, v in metrics.items():
+        for key, value in metrics.items():
 
-            if v is None:
+            if value is None:
 
-                print(f"{k:<20}: N/A")
+                print(f"{key:<20}: N/A")
 
             else:
 
-                print(f"{k:<20}: {v:.4f}")
+                print(f"{key:<20}: {value:.4f}")
 
         print("=" * 60)
 
         return metrics
-        # =====================================================
+
+
+    # =====================================================
     # Save Final Model
     # =====================================================
 
@@ -391,58 +423,50 @@ class ResearchTrainer:
 
         )
 
-        model_path = model_folder / f"{self.model_name}.keras"
+        final_weights = model_folder / "final.weights.h5"
 
-        self.model.save(
+        self.model.save_weights(
 
-            model_path
+            str(final_weights)
 
         )
 
         print()
 
         print("=" * 60)
-
-        print("Model Saved Successfully")
-
+        print("Final Weights Saved")
+        print("=" * 60)
+        print(final_weights)
         print("=" * 60)
 
-        print(f"Path : {model_path}")
-
-        print("=" * 60)
-
-        return model_path
+        return final_weights
 
 
     # =====================================================
-    # Load Saved Model
+    # Load Saved Weights
     # =====================================================
 
-    @staticmethod
+    def load_model(self, weight_path):
 
-    def load_model(model_path):
+        self.model.load_weights(
+
+            str(weight_path)
+
+        )
 
         print()
 
         print("=" * 60)
-
-        print("Loading Saved Model")
-
+        print("Weights Loaded")
+        print("=" * 60)
+        print(weight_path)
         print("=" * 60)
 
-        print(model_path)
-
-        print("=" * 60)
-
-        return tf.keras.models.load_model(
-
-            model_path
-
-        )
+        return self.model
 
 
     # =====================================================
-    # Fine Tune Model (Future Support)
+    # Fine Tune
     # =====================================================
 
     def fine_tune(
@@ -460,9 +484,7 @@ class ResearchTrainer:
         print()
 
         print("=" * 60)
-
-        print("Fine Tuning Started")
-
+        print("Fine Tuning")
         print("=" * 60)
 
         base_model = self.model.layers[0]
@@ -495,23 +517,17 @@ class ResearchTrainer:
 
             epochs=epochs,
 
-            callbacks=get_callbacks(
-
-                self.model_name + "_finetune"
-
-            ),
-
             verbose=1
 
         )
 
-        fine_tune_folder = Path(
+        fine_folder = Path(
 
             MODEL_DIR
 
         ) / self.model_name
 
-        fine_tune_folder.mkdir(
+        fine_folder.mkdir(
 
             parents=True,
 
@@ -519,24 +535,20 @@ class ResearchTrainer:
 
         )
 
-        fine_tune_path = fine_tune_folder / f"{self.model_name}_finetuned.keras"
+        fine_weights = fine_folder / "finetuned.weights.h5"
 
-        self.model.save(
+        self.model.save_weights(
 
-            fine_tune_path
+            str(fine_weights)
 
         )
 
         print()
 
         print("=" * 60)
-
         print("Fine Tuning Completed")
-
         print("=" * 60)
-
-        print(f"Saved : {fine_tune_path}")
-
+        print(fine_weights)
         print("=" * 60)
 
         return history

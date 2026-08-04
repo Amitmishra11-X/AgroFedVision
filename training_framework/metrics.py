@@ -2,12 +2,30 @@
 ============================================================
 AgroFedVision Research Metrics
 ============================================================
+
+Computes all evaluation metrics required for research papers.
+
+Outputs
+-------
+✓ Accuracy
+✓ Precision
+✓ Recall
+✓ F1 Score
+✓ Macro F1
+✓ Micro F1
+✓ Cohen Kappa
+✓ Matthews Correlation Coefficient
+✓ ROC AUC
+✓ Confusion Matrix
+✓ Classification Report
+✓ metrics.json
+
+============================================================
 """
 
 import json
 from pathlib import Path
 
-import numpy as np
 import pandas as pd
 
 from sklearn.metrics import (
@@ -19,108 +37,153 @@ from sklearn.metrics import (
     classification_report,
     cohen_kappa_score,
     matthews_corrcoef,
+    roc_auc_score,
 )
 
 
 class ResearchMetrics:
 
-    def __init__(self):
+    def __init__(self, class_names):
 
-        Path("outputs/reports").mkdir(
-            parents=True,
-            exist_ok=True
-        )
+        self.class_names = class_names
+
+    # =====================================================
+    # Evaluate
+    # =====================================================
 
     def evaluate(
 
         self,
 
-        model,
+        y_true,
 
-        test_ds,
+        y_pred,
 
-        class_names
+        y_prob=None,
+
+        output_dir=None
 
     ):
 
-        y_true = []
+        metrics = {}
 
-        y_pred = []
+        # --------------------------------------------------
+        # Basic Metrics
+        # --------------------------------------------------
 
-        for images, labels in test_ds:
+        metrics["Accuracy"] = accuracy_score(
 
-            predictions = model.predict(
-                images,
-                verbose=0
-            )
+            y_true,
 
-            y_pred.extend(
-                np.argmax(predictions, axis=1)
-            )
+            y_pred
 
-            # Handle both one-hot and integer labels
-            if len(labels.shape) > 1:
-                y_true.extend(
-                    np.argmax(labels.numpy(), axis=1)
+        )
+
+        metrics["Precision"] = precision_score(
+
+            y_true,
+
+            y_pred,
+
+            average="weighted",
+
+            zero_division=0
+
+        )
+
+        metrics["Recall"] = recall_score(
+
+            y_true,
+
+            y_pred,
+
+            average="weighted",
+
+            zero_division=0
+
+        )
+
+        metrics["F1"] = f1_score(
+
+            y_true,
+
+            y_pred,
+
+            average="weighted",
+
+            zero_division=0
+
+        )
+
+        metrics["Macro_F1"] = f1_score(
+
+            y_true,
+
+            y_pred,
+
+            average="macro",
+
+            zero_division=0
+
+        )
+
+        metrics["Micro_F1"] = f1_score(
+
+            y_true,
+
+            y_pred,
+
+            average="micro",
+
+            zero_division=0
+
+        )
+
+        metrics["Cohen_Kappa"] = cohen_kappa_score(
+
+            y_true,
+
+            y_pred
+
+        )
+
+        metrics["MCC"] = matthews_corrcoef(
+
+            y_true,
+
+            y_pred
+
+        )
+
+        # --------------------------------------------------
+        # ROC AUC
+        # --------------------------------------------------
+
+        if y_prob is not None:
+
+            try:
+
+                metrics["ROC_AUC"] = roc_auc_score(
+
+                    y_true,
+
+                    y_prob,
+
+                    multi_class="ovr"
+
                 )
-            else:
-                y_true.extend(
-                    labels.numpy()
-                )
 
-        y_true = np.array(y_true)
-        y_pred = np.array(y_pred)
+            except Exception:
 
-        metrics = {
+                metrics["ROC_AUC"] = None
 
-            "Accuracy": accuracy_score(y_true, y_pred),
+        else:
 
-            "Precision": precision_score(
-                y_true,
-                y_pred,
-                average="weighted",
-                zero_division=0
-            ),
+            metrics["ROC_AUC"] = None
 
-            "Recall": recall_score(
-                y_true,
-                y_pred,
-                average="weighted",
-                zero_division=0
-            ),
-
-            "F1": f1_score(
-                y_true,
-                y_pred,
-                average="weighted",
-                zero_division=0
-            ),
-
-            "Macro_F1": f1_score(
-                y_true,
-                y_pred,
-                average="macro",
-                zero_division=0
-            ),
-
-            "Micro_F1": f1_score(
-                y_true,
-                y_pred,
-                average="micro",
-                zero_division=0
-            ),
-
-            "Cohen_Kappa": cohen_kappa_score(
-                y_true,
-                y_pred
-            ),
-
-            "MCC": matthews_corrcoef(
-                y_true,
-                y_pred
-            )
-
-        }
+        # --------------------------------------------------
+        # Classification Report
+        # --------------------------------------------------
 
         report = classification_report(
 
@@ -128,7 +191,7 @@ class ResearchMetrics:
 
             y_pred,
 
-            target_names=class_names,
+            target_names=self.class_names,
 
             output_dict=True,
 
@@ -136,29 +199,70 @@ class ResearchMetrics:
 
         )
 
+        # --------------------------------------------------
+        # Confusion Matrix
+        # --------------------------------------------------
+
         cm = confusion_matrix(
+
             y_true,
+
             y_pred
+
         )
 
-        pd.DataFrame(report).transpose().to_csv(
-            "outputs/reports/classification_report.csv"
-        )
+        # --------------------------------------------------
+        # Save Reports
+        # --------------------------------------------------
 
-        pd.DataFrame(cm).to_csv(
-            "outputs/reports/confusion_matrix.csv",
-            index=False
-        )
+        if output_dir is not None:
 
-        with open(
-            "outputs/reports/metrics.json",
-            "w"
-        ) as f:
+            output_dir = Path(output_dir)
 
-            json.dump(
-                metrics,
-                f,
-                indent=4
+            output_dir.mkdir(
+
+                parents=True,
+
+                exist_ok=True
+
             )
 
-        return metrics, report, cm
+            pd.DataFrame(report).transpose().to_csv(
+
+                output_dir /
+
+                "classification_report.csv"
+
+            )
+
+            pd.DataFrame(cm).to_csv(
+
+                output_dir /
+
+                "confusion_matrix.csv",
+
+                index=False
+
+            )
+
+            with open(
+
+                output_dir /
+
+                "metrics.json",
+
+                "w"
+
+            ) as f:
+
+                json.dump(
+
+                    metrics,
+
+                    f,
+
+                    indent=4
+
+                )
+
+        return metrics, cm, report

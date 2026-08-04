@@ -1,6 +1,9 @@
 """
-Research Training Callbacks
-AgroFedVision
+============================================================
+AgroFedVision Research Callbacks
+============================================================
+Uses Custom Checkpoint
+============================================================
 """
 
 from pathlib import Path
@@ -8,7 +11,6 @@ from pathlib import Path
 from tensorflow.keras.callbacks import (
 
     EarlyStopping,
-    ModelCheckpoint,
     ReduceLROnPlateau,
     CSVLogger,
     TensorBoard
@@ -17,20 +19,46 @@ from tensorflow.keras.callbacks import (
 
 from config import *
 
+from custom_checkpoint import SaveTrainingState
+
 
 def get_callbacks(model_name):
 
-    Path("checkpoints").mkdir(exist_ok=True)
+    Path(LOG_DIR).mkdir(
 
-    Path("logs").mkdir(exist_ok=True)
+        parents=True,
 
-    Path("outputs/history").mkdir(parents=True, exist_ok=True)
+        exist_ok=True
+
+    )
+
+    Path(HISTORY_DIR).mkdir(
+
+        parents=True,
+
+        exist_ok=True
+
+    )
 
     callbacks = []
 
-    # ----------------------------------------
+    # =====================================================
+    # Custom Checkpoint
+    # =====================================================
+
+    callbacks.append(
+
+        SaveTrainingState(
+
+            model_name
+
+        )
+
+    )
+
+    # =====================================================
     # Early Stopping
-    # ----------------------------------------
+    # =====================================================
 
     callbacks.append(
 
@@ -48,29 +76,9 @@ def get_callbacks(model_name):
 
     )
 
-    # ----------------------------------------
-    # Save Best Model
-    # ----------------------------------------
-
-    callbacks.append(
-
-        ModelCheckpoint(
-
-            filepath=f"checkpoints/{model_name}_best.keras",
-
-            monitor="val_accuracy",
-
-            save_best_only=True,
-
-            verbose=1
-
-        )
-
-    )
-
-    # ----------------------------------------
-    # Learning Rate Scheduler
-    # ----------------------------------------
+    # =====================================================
+    # Reduce LR
+    # =====================================================
 
     callbacks.append(
 
@@ -78,9 +86,9 @@ def get_callbacks(model_name):
 
             monitor="val_loss",
 
-            factor=0.5,
+            factor=REDUCE_FACTOR,
 
-            patience=3,
+            patience=REDUCE_PATIENCE,
 
             verbose=1
 
@@ -88,29 +96,43 @@ def get_callbacks(model_name):
 
     )
 
-    # ----------------------------------------
+    # =====================================================
     # CSV Logger
-    # ----------------------------------------
+    # =====================================================
 
     callbacks.append(
 
         CSVLogger(
 
-            f"outputs/history/{model_name}.csv"
+            str(
+
+                Path(HISTORY_DIR) /
+
+                f"{model_name}.csv"
+
+            ),
+
+            append=True
 
         )
 
     )
 
-    # ----------------------------------------
+    # =====================================================
     # TensorBoard
-    # ----------------------------------------
+    # =====================================================
 
     callbacks.append(
 
         TensorBoard(
 
-            log_dir=f"logs/{model_name}",
+            log_dir=str(
+
+                Path(LOG_DIR) /
+
+                model_name
+
+            ),
 
             histogram_freq=1
 
