@@ -7,12 +7,18 @@ AgroFedVision Benchmark Manager
 from pathlib import Path
 import pandas as pd
 
+from config import OUTPUT_DIR
+
 
 class Benchmark:
 
     def __init__(self):
 
         self.results = []
+
+    # =====================================================
+    # Add Model Result
+    # =====================================================
 
     def add(
 
@@ -54,15 +60,13 @@ class Benchmark:
 
         self.results.append(row)
 
-    def save(
+    # =====================================================
+    # Save Benchmark
+    # =====================================================
 
-        self,
+    def save(self, dataset_name):
 
-        dataset_name
-
-    ):
-
-        output = Path("outputs") / dataset_name
+        output = Path(OUTPUT_DIR) / dataset_name
 
         output.mkdir(
 
@@ -72,25 +76,80 @@ class Benchmark:
 
         )
 
-        df = pd.DataFrame(
+        benchmark_file = output / "benchmark.csv"
+
+        new_df = pd.DataFrame(
 
             self.results
 
         )
 
-        df.sort_values(
+        # ----------------------------------------
+        # Load Existing Benchmark
+        # ----------------------------------------
+
+        if benchmark_file.exists():
+
+            old_df = pd.read_csv(
+
+                benchmark_file
+
+            )
+
+            df = pd.concat(
+
+                [
+
+                    old_df,
+
+                    new_df
+
+                ],
+
+                ignore_index=True
+
+            )
+
+            # Keep only latest result of each model
+            df = df.drop_duplicates(
+
+                subset="Model",
+
+                keep="last"
+
+            )
+
+        else:
+
+            df = new_df
+
+        # ----------------------------------------
+        # Sort by Accuracy
+        # ----------------------------------------
+
+        df = df.sort_values(
 
             by="Accuracy",
 
-            ascending=False,
+            ascending=False
+
+        )
+
+        df.reset_index(
+
+            drop=True,
 
             inplace=True
 
         )
 
+        # ----------------------------------------
+        # Save
+        # ----------------------------------------
+
         df.to_csv(
 
-            output / "benchmark.csv",
+            benchmark_file,
 
             index=False
 
@@ -99,13 +158,9 @@ class Benchmark:
         print()
 
         print("=" * 60)
-
-        print("Benchmark Saved")
-
+        print("Benchmark Updated")
         print("=" * 60)
-
-        print(output / "benchmark.csv")
-
+        print(benchmark_file)
         print("=" * 60)
 
         return df

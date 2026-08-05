@@ -63,7 +63,7 @@ DATASETS = {
 
         "models": [
 
-            "cnn",
+            "vgg16",
 
 
 
