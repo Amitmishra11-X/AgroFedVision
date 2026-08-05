@@ -68,6 +68,7 @@ class DuplicateRemover:
         duplicates = 0
 
         images = list(self.dataset.rglob("*"))
+        print(f"Files Found : {len(images)}")
 
         for file in images:
 
@@ -96,6 +97,13 @@ class DuplicateRemover:
         print("Duplicates   :", duplicates)
 
         print("Unique       :", len(self.unique))
+        print()
+
+        print("First 10 Unique Files:")
+
+        for file in self.unique[:10]:
+
+            print(file)
 
     # --------------------------------------------------
 

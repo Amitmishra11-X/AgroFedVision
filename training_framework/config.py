@@ -63,7 +63,7 @@ DATASETS = {
 
         "models": [
 
-            "vgg16",
+            "densenet",
 
 
 

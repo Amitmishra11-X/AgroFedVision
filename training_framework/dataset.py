@@ -1,6 +1,25 @@
 """
-Dataset Loader
-AgroFedVision Research Framework
+============================================================
+AgroFedVision Dataset Loader
+============================================================
+Universal Dataset Loader
+
+Supports
+
+✓ CNN
+✓ MobileNet
+✓ VGG16
+✓ ResNet50
+✓ EfficientNet
+✓ DenseNet
+✓ Xception
+
+Each model can use its own
+
+✓ Image Size
+✓ preprocess_input()
+
+============================================================
 """
 
 import tensorflow as tf
@@ -8,7 +27,6 @@ import tensorflow as tf
 from tensorflow.keras.preprocessing import image_dataset_from_directory
 
 from config import *
-
 
 AUTOTUNE = tf.data.AUTOTUNE
 
@@ -31,42 +49,89 @@ data_augmentation = tf.keras.Sequential([
 
 
 # =====================================================
-# Normalization
-# =====================================================
-
-normalization = tf.keras.layers.Rescaling(1.0 / 255)
-
-
-# =====================================================
 # Dataset Loader
 # =====================================================
 
-def load_dataset(folder, shuffle=True):
+def load_dataset(
+
+    folder,
+
+    image_size,
+
+    preprocess_fn,
+
+    shuffle=True
+
+):
 
     dataset = image_dataset_from_directory(
 
         folder,
 
-        image_size=(IMAGE_SIZE, IMAGE_SIZE),
+        image_size=(image_size, image_size),
 
         batch_size=BATCH_SIZE,
 
         shuffle=shuffle,
-        
+
         label_mode="int"
 
     )
 
     class_names = dataset.class_names
 
+    # ----------------------------------------
+    # Apply preprocessing
+    # ----------------------------------------
+
     dataset = dataset.map(
 
-        lambda x, y: (normalization(x), y),
+        lambda x, y: (
+
+            preprocess_fn(
+
+                tf.cast(x, tf.float32)
+
+            ),
+
+            y
+
+        ),
 
         num_parallel_calls=AUTOTUNE
 
     )
 
-    dataset = dataset.prefetch(AUTOTUNE)
+    # ----------------------------------------
+    # Data Augmentation
+    # ----------------------------------------
+
+    if USE_AUGMENTATION and shuffle:
+
+        dataset = dataset.map(
+
+            lambda x, y: (
+
+                data_augmentation(
+
+                    x,
+
+                    training=True
+
+                ),
+
+                y
+
+            ),
+
+            num_parallel_calls=AUTOTUNE
+
+        )
+
+    dataset = dataset.prefetch(
+
+        AUTOTUNE
+
+    )
 
     return dataset, class_names
