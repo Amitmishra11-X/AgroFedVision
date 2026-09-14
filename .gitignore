@@ -11,7 +11,13 @@ __pycache__/
 venv/
 
 # ==========================
-# VS Code
+# Node
+# ==========================
+frontend/node_modules/
+frontend/dist/
+
+# ==========================
+# IDE
 # ==========================
 .vscode/
 .idea/
@@ -31,12 +37,14 @@ results/
 outputs/
 
 # ==========================
-# Images generated
+# Generated images
 # ==========================
 *.png
+*.jpg
+*.jpeg
 
 # ==========================
-# CSV Outputs
+# Generated CSV
 # ==========================
 uav_features.csv
 duplicate_report.csv
@@ -53,3 +61,22 @@ duplicate_report.csv
 # Logs
 # ==========================
 *.log
+
+# ==========================
+# Temporary files
+# ==========================
+requirements_temp.txt
+api_uploads/
+
+# ==========================
+# AgroFedVision deployment artifacts
+# ==========================
+!results/
+!results/agrofedvision_fusion_model.keras
+!results/fusion_label_encoder.pkl
+!results/fusion_sensor_scaler.pkl
+!results/fusion_uav_scaler.pkl
+!results/fusion_sensor_cols.pkl
+
+!data/
+!data/fused_dataset.csv

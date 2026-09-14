@@ -1,0 +1,204 @@
+{
+    "overall_quality": 0.909,
+    "status": "Good",
+    "feature_quality": [
+        {
+            "Feature": "co2_concentration",
+            "Quality": 0.986,
+            "Missing": 0,
+            "Invalid": 0,
+            "Outliers": 0,
+            "Noise": 0.071,
+            "Status": "Excellent"
+        },
+        {
+            "Feature": "ph",
+            "Quality": 0.97,
+            "Missing": 0,
+            "Invalid": 0,
+            "Outliers": 57,
+            "Noise": 0.12,
+            "Status": "Excellent"
+        },
+        {
+            "Feature": "sunlight_exposure",
+            "Quality": 0.953,
+            "Missing": 0,
+            "Invalid": 0,
+            "Outliers": 0,
+            "Noise": 0.233,
+            "Status": "Excellent"
+        },
+        {
+            "Feature": "temperature",
+            "Quality": 0.951,
+            "Missing": 0,
+            "Invalid": 0,
+            "Outliers": 86,
+            "Noise": 0.198,
+            "Status": "Excellent"
+        },
+        {
+            "Feature": "soil_moisture",
+            "Quality": 0.942,
+            "Missing": 0,
+            "Invalid": 0,
+            "Outliers": 0,
+            "Noise": 0.288,
+            "Status": "Good"
+        },
+        {
+            "Feature": "humidity",
+            "Quality": 0.934,
+            "Missing": 0,
+            "Invalid": 0,
+            "Outliers": 30,
+            "Noise": 0.311,
+            "Status": "Good"
+        },
+        {
+            "Feature": "fertilizer_usage",
+            "Quality": 0.931,
+            "Missing": 0,
+            "Invalid": 0,
+            "Outliers": 0,
+            "Noise": 0.346,
+            "Status": "Good"
+        },
+        {
+            "Feature": "crop_density",
+            "Quality": 0.93,
+            "Missing": 0,
+            "Invalid": 0,
+            "Outliers": 0,
+            "Noise": 0.348,
+            "Status": "Good"
+        },
+        {
+            "Feature": "water_usage_efficiency",
+            "Quality": 0.924,
+            "Missing": 0,
+            "Invalid": 0,
+            "Outliers": 0,
+            "Noise": 0.381,
+            "Status": "Good"
+        },
+        {
+            "Feature": "water_source_type",
+            "Quality": 0.919,
+            "Missing": 0,
+            "Invalid": 0,
+            "Outliers": 0,
+            "Noise": 0.405,
+            "Status": "Good"
+        },
+        {
+            "Feature": "growth_stage",
+            "Quality": 0.918,
+            "Missing": 0,
+            "Invalid": 0,
+            "Outliers": 0,
+            "Noise": 0.41,
+            "Status": "Good"
+        },
+        {
+            "Feature": "soil_type",
+            "Quality": 0.918,
+            "Missing": 0,
+            "Invalid": 0,
+            "Outliers": 0,
+            "Noise": 0.408,
+            "Status": "Good"
+        },
+        {
+            "Feature": "organic_matter",
+            "Quality": 0.905,
+            "Missing": 0,
+            "Invalid": 0,
+            "Outliers": 0,
+            "Noise": 0.477,
+            "Status": "Good"
+        },
+        {
+            "Feature": "irrigation_frequency",
+            "Quality": 0.903,
+            "Missing": 0,
+            "Invalid": 0,
+            "Outliers": 0,
+            "Noise": 0.483,
+            "Status": "Good"
+        },
+        {
+            "Feature": "wind_speed",
+            "Quality": 0.887,
+            "Missing": 0,
+            "Invalid": 0,
+            "Outliers": 0,
+            "Noise": 0.564,
+            "Status": "Good"
+        },
+        {
+            "Feature": "frost_risk",
+            "Quality": 0.886,
+            "Missing": 0,
+            "Invalid": 0,
+            "Outliers": 0,
+            "Noise": 0.568,
+            "Status": "Good"
+        },
+        {
+            "Feature": "pest_pressure",
+            "Quality": 0.884,
+            "Missing": 0,
+            "Invalid": 0,
+            "Outliers": 0,
+            "Noise": 0.579,
+            "Status": "Good"
+        },
+        {
+            "Feature": "urban_area_proximity",
+            "Quality": 0.883,
+            "Missing": 0,
+            "Invalid": 0,
+            "Outliers": 0,
+            "Noise": 0.586,
+            "Status": "Good"
+        },
+        {
+            "Feature": "rainfall",
+            "Quality": 0.882,
+            "Missing": 0,
+            "Invalid": 0,
+            "Outliers": 100,
+            "Noise": 0.531,
+            "Status": "Good"
+        },
+        {
+            "Feature": "P",
+            "Quality": 0.861,
+            "Missing": 0,
+            "Invalid": 0,
+            "Outliers": 138,
+            "Noise": 0.618,
+            "Status": "Good"
+        },
+        {
+            "Feature": "N",
+            "Quality": 0.854,
+            "Missing": 0,
+            "Invalid": 0,
+            "Outliers": 0,
+            "Noise": 0.73,
+            "Status": "Good"
+        },
+        {
+            "Feature": "K",
+            "Quality": 0.777,
+            "Missing": 0,
+            "Invalid": 0,
+            "Outliers": 200,
+            "Noise": 1.0,
+            "Status": "Moderate"
+        }
+    ]
+}

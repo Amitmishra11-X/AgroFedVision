@@ -63,7 +63,10 @@ def load_dataset(
     shuffle=True
 
 ):
-
+    print("=" * 60)
+    print("Loading Dataset : ", folder)
+    print("=" * 60)
+    
     dataset = image_dataset_from_directory(
 
         folder,

@@ -1,0 +1,9 @@
+AGROFEDVISION UAV QUALITY REPORT
+========================================
+
+Pipeline       : 100.00
+Vegetation     : 23.80
+Nutrient       : 74.60
+Prescription   : 100.00
+Image          : 99.79
+Reliability    : 72.03

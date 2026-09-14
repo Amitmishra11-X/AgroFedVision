@@ -1,0 +1,25 @@
+{
+    "fold_accuracies": [
+        0.6405228972434998,
+        0.7368420958518982,
+        0.7236841917037964,
+        0.6381579041481018,
+        0.6578947305679321
+    ],
+    "fold_losses": [
+        0.8617438077926636,
+        0.7276804447174072,
+        0.6886714100837708,
+        0.8265130519866943,
+        0.7669850587844849
+    ],
+    "mean_accuracy": 0.6794203639030456,
+    "std_accuracy": 0.04227410114861576,
+    "min_accuracy": 0.6381579041481018,
+    "max_accuracy": 0.7368420958518982,
+    "previous_baseline_single_split": 0.7778,
+    "n_folds": 5,
+    "augmentation": [
+        "DISABLED -- control run for comparison against augmented CV"
+    ]
+}

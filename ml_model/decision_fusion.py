@@ -170,24 +170,28 @@ def calculate_uav_score(uav_result):
     if uav_result is None:
         return None
 
-    ndvi = uav_result.get("NDVI_Mean", 0.50)
+    # Safely handle missing/None UAV values
+    ndvi = uav_result.get("NDVI_Mean")
+    ndvi_std = uav_result.get("NDVI_Std")
+    ndre = uav_result.get("NDRE_Mean")
 
-    ndvi_std = uav_result.get("NDVI_Std", 0)
+    if ndvi is None:
+        ndvi = 0.50
 
-    ndre = uav_result.get("NDRE_Mean", ndvi)
+    if ndvi_std is None:
+        ndvi_std = 0.0
+
+    if ndre is None:
+        ndre = ndvi
 
     score = ndvi * 70
-
     score += ndre * 20
-
     score += 10
 
     if ndvi_std > 0.20:
-
         score -= 10
 
     elif ndvi_std > 0.10:
-
         score -= 5
 
     score = max(0, min(score, 100))

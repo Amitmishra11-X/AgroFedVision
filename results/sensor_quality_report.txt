@@ -1,0 +1,17 @@
+SENSOR QUALITY REPORT
+=============================
+
+Overall Score : 0.887
+Status : Good
+
+Missing Values : 0
+Duplicate Rows : 0
+Invalid Values : 0
+Outlier Percentage : 1.26%
+Noise Score : 0.441
+
+Quality Breakdown
+Completeness : 1.000
+Consistency : 1.000
+Validity : 0.987
+Noise : 0.559

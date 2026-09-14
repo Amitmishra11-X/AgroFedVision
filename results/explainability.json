@@ -1,0 +1,358 @@
+{
+    "timestamp": "2026-09-14 15:33:57",
+    "overall_status": "Moderate",
+    "risk_level": "Medium",
+    "health_score": 61.22,
+    "modules": [
+        {
+            "module": "Image",
+            "score": 63.0,
+            "confidence": 0.9999216794967651,
+            "summary": "2 Moderate Risk leaves, 0 High Risk leaves detected.",
+            "evidence": {
+                "healthy": 0,
+                "moderate": 2,
+                "high": 0,
+                "majority_class": "Moderate_Risk",
+                "severity_percentage": 50.0,
+                "health_index": 60.0,
+                "mixed_disease": false
+            },
+            "recommendation": "Inspect symptomatic leaves and monitor disease progression."
+        },
+        {
+            "module": "Sensor",
+            "score": 77.09,
+            "confidence": null,
+            "summary": "Sensor Health Score 100",
+            "evidence": {
+                "nitrogen_status": "Optimal",
+                "phosphorus_status": "High",
+                "potassium_status": "High",
+                "moisture_status": "Optimal",
+                "soil_ph": "Neutral",
+                "temperature_status": "Optimal",
+                "humidity_status": "Optimal",
+                "fertilizer": [],
+                "irrigation": "No irrigation required",
+                "sensor_health_score": 100
+            },
+            "recommendation": "Maintain balanced irrigation and nutrient levels."
+        },
+        {
+            "module": "UAV",
+            "score": 27.66,
+            "confidence": null,
+            "summary": "302 captures analysed.",
+            "evidence": {
+                "Average NDVI": 0.22153390913238744,
+                "Average NDRE": 0.10755966558929325,
+                "Best Capture": "IMG_0328",
+                "NDVI Std": 0.08302586213879366
+            },
+            "recommendation": "Inspect regions having lower vegetation vigor."
+        }
+    ],
+    "shap_explanation": {
+        "method": "SHAP KernelExplainer",
+        "scope": "Structured fusion inputs only (sensor + UAV); image held fixed.",
+        "explained_class": "Moderate_Risk",
+        "predicted_probability": 0.6335666179656982,
+        "modality_contribution": {
+            "sensor": 13.487000950305344,
+            "uav": 86.51299904969466
+        },
+        "top_features": [
+            {
+                "feature": "NDVI_Std",
+                "modality": "uav",
+                "value": -0.38803398609161377,
+                "shap_value": -0.10363227927358082,
+                "absolute_shap": 0.10363227927358082,
+                "direction": "negative_for_predicted_class"
+            },
+            {
+                "feature": "NDRE_Std",
+                "modality": "uav",
+                "value": -0.42094686627388,
+                "shap_value": 0.08657310711778306,
+                "absolute_shap": 0.08657310711778306,
+                "direction": "positive_for_predicted_class"
+            },
+            {
+                "feature": "NDVI_Mean",
+                "modality": "uav",
+                "value": 0.6914379000663757,
+                "shap_value": 0.013267386216840807,
+                "absolute_shap": 0.013267386216840807,
+                "direction": "positive_for_predicted_class"
+            },
+            {
+                "feature": "fertilizer_usage",
+                "modality": "sensor",
+                "value": -0.20921140909194946,
+                "shap_value": -0.012091591146885895,
+                "absolute_shap": 0.012091591146885895,
+                "direction": "negative_for_predicted_class"
+            },
+            {
+                "feature": "sunlight_exposure",
+                "modality": "sensor",
+                "value": 2.5871987342834473,
+                "shap_value": 0.0046354099551820785,
+                "absolute_shap": 0.0046354099551820785,
+                "direction": "positive_for_predicted_class"
+            },
+            {
+                "feature": "water_usage_efficiency",
+                "modality": "sensor",
+                "value": 2.2665066719055176,
+                "shap_value": 0.004585148120286188,
+                "absolute_shap": 0.004585148120286188,
+                "direction": "positive_for_predicted_class"
+            },
+            {
+                "feature": "soil_type",
+                "modality": "sensor",
+                "value": 21.5,
+                "shap_value": -0.00418678588402124,
+                "absolute_shap": 0.00418678588402124,
+                "direction": "negative_for_predicted_class"
+            },
+            {
+                "feature": "co2_concentration",
+                "modality": "sensor",
+                "value": -3.050894260406494,
+                "shap_value": 0.0022689775431136844,
+                "absolute_shap": 0.0022689775431136844,
+                "direction": "positive_for_predicted_class"
+            },
+            {
+                "feature": "growth_stage",
+                "modality": "sensor",
+                "value": 4.5,
+                "shap_value": 0.0022234585306364174,
+                "absolute_shap": 0.0022234585306364174,
+                "direction": "positive_for_predicted_class"
+            },
+            {
+                "feature": "P",
+                "modality": "sensor",
+                "value": 0.4642857015132904,
+                "shap_value": 0.0017291506798527766,
+                "absolute_shap": 0.0017291506798527766,
+                "direction": "positive_for_predicted_class"
+            }
+        ],
+        "all_features": [
+            {
+                "feature": "NDVI_Std",
+                "modality": "uav",
+                "value": -0.38803398609161377,
+                "shap_value": -0.10363227927358082,
+                "absolute_shap": 0.10363227927358082,
+                "direction": "negative_for_predicted_class"
+            },
+            {
+                "feature": "NDRE_Std",
+                "modality": "uav",
+                "value": -0.42094686627388,
+                "shap_value": 0.08657310711778306,
+                "absolute_shap": 0.08657310711778306,
+                "direction": "positive_for_predicted_class"
+            },
+            {
+                "feature": "NDVI_Mean",
+                "modality": "uav",
+                "value": 0.6914379000663757,
+                "shap_value": 0.013267386216840807,
+                "absolute_shap": 0.013267386216840807,
+                "direction": "positive_for_predicted_class"
+            },
+            {
+                "feature": "fertilizer_usage",
+                "modality": "sensor",
+                "value": -0.20921140909194946,
+                "shap_value": -0.012091591146885895,
+                "absolute_shap": 0.012091591146885895,
+                "direction": "negative_for_predicted_class"
+            },
+            {
+                "feature": "sunlight_exposure",
+                "modality": "sensor",
+                "value": 2.5871987342834473,
+                "shap_value": 0.0046354099551820785,
+                "absolute_shap": 0.0046354099551820785,
+                "direction": "positive_for_predicted_class"
+            },
+            {
+                "feature": "water_usage_efficiency",
+                "modality": "sensor",
+                "value": 2.2665066719055176,
+                "shap_value": 0.004585148120286188,
+                "absolute_shap": 0.004585148120286188,
+                "direction": "positive_for_predicted_class"
+            },
+            {
+                "feature": "soil_type",
+                "modality": "sensor",
+                "value": 21.5,
+                "shap_value": -0.00418678588402124,
+                "absolute_shap": 0.00418678588402124,
+                "direction": "negative_for_predicted_class"
+            },
+            {
+                "feature": "co2_concentration",
+                "modality": "sensor",
+                "value": -3.050894260406494,
+                "shap_value": 0.0022689775431136844,
+                "absolute_shap": 0.0022689775431136844,
+                "direction": "positive_for_predicted_class"
+            },
+            {
+                "feature": "growth_stage",
+                "modality": "sensor",
+                "value": 4.5,
+                "shap_value": 0.0022234585306364174,
+                "absolute_shap": 0.0022234585306364174,
+                "direction": "positive_for_predicted_class"
+            },
+            {
+                "feature": "P",
+                "modality": "sensor",
+                "value": 0.4642857015132904,
+                "shap_value": 0.0017291506798527766,
+                "absolute_shap": 0.0017291506798527766,
+                "direction": "positive_for_predicted_class"
+            },
+            {
+                "feature": "N",
+                "modality": "sensor",
+                "value": 0.29411765933036804,
+                "shap_value": 0.0,
+                "absolute_shap": 0.0,
+                "direction": "neutral"
+            },
+            {
+                "feature": "K",
+                "modality": "sensor",
+                "value": 0.375,
+                "shap_value": 0.0,
+                "absolute_shap": 0.0,
+                "direction": "neutral"
+            },
+            {
+                "feature": "temperature",
+                "modality": "sensor",
+                "value": 0.4973042905330658,
+                "shap_value": 0.0,
+                "absolute_shap": 0.0,
+                "direction": "neutral"
+            },
+            {
+                "feature": "humidity",
+                "modality": "sensor",
+                "value": 0.6512151956558228,
+                "shap_value": 0.0,
+                "absolute_shap": 0.0,
+                "direction": "neutral"
+            },
+            {
+                "feature": "ph",
+                "modality": "sensor",
+                "value": 0.5659144520759583,
+                "shap_value": 0.0,
+                "absolute_shap": 0.0,
+                "direction": "neutral"
+            },
+            {
+                "feature": "rainfall",
+                "modality": "sensor",
+                "value": 0.2850787043571472,
+                "shap_value": 0.0,
+                "absolute_shap": 0.0,
+                "direction": "neutral"
+            },
+            {
+                "feature": "soil_moisture",
+                "modality": "sensor",
+                "value": 1.655236840248108,
+                "shap_value": 0.0,
+                "absolute_shap": 0.0,
+                "direction": "neutral"
+            },
+            {
+                "feature": "wind_speed",
+                "modality": "sensor",
+                "value": 0.9011972546577454,
+                "shap_value": 0.0,
+                "absolute_shap": 0.0,
+                "direction": "neutral"
+            },
+            {
+                "feature": "organic_matter",
+                "modality": "sensor",
+                "value": 2.1185379028320312,
+                "shap_value": 0.0,
+                "absolute_shap": 0.0,
+                "direction": "neutral"
+            },
+            {
+                "feature": "irrigation_frequency",
+                "modality": "sensor",
+                "value": 5.600000381469727,
+                "shap_value": 0.0,
+                "absolute_shap": 0.0,
+                "direction": "neutral"
+            },
+            {
+                "feature": "crop_density",
+                "modality": "sensor",
+                "value": 1.0019798278808594,
+                "shap_value": 0.0,
+                "absolute_shap": 0.0,
+                "direction": "neutral"
+            },
+            {
+                "feature": "pest_pressure",
+                "modality": "sensor",
+                "value": 0.04939519613981247,
+                "shap_value": 0.0,
+                "absolute_shap": 0.0,
+                "direction": "neutral"
+            },
+            {
+                "feature": "urban_area_proximity",
+                "modality": "sensor",
+                "value": 0.13993588089942932,
+                "shap_value": 0.0,
+                "absolute_shap": 0.0,
+                "direction": "neutral"
+            },
+            {
+                "feature": "water_source_type",
+                "modality": "sensor",
+                "value": 5.5,
+                "shap_value": 0.0,
+                "absolute_shap": 0.0,
+                "direction": "neutral"
+            },
+            {
+                "feature": "frost_risk",
+                "modality": "sensor",
+                "value": 0.09940043091773987,
+                "shap_value": 0.0,
+                "absolute_shap": 0.0,
+                "direction": "neutral"
+            },
+            {
+                "feature": "NDRE_Mean",
+                "modality": "uav",
+                "value": 0.6175394654273987,
+                "shap_value": 0.0,
+                "absolute_shap": 0.0,
+                "direction": "neutral"
+            }
+        ]
+    }
+}

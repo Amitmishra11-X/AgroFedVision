@@ -1,0 +1,12 @@
+AGROFEDVISION
+FERTILIZER PRESCRIPTION REPORT
+
+Healthy Area: 13.77%
+Nitrogen Deficiency: 32.88%
+Phosphorus Deficiency: 16.86%
+Potassium Deficiency: 15.72%
+
+Recommendations:
+- Apply Urea (Nitrogen fertilizer)
+- Apply DAP (Phosphorus fertilizer)
+- Apply MOP (Potassium fertilizer)

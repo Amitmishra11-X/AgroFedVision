@@ -1,0 +1,20 @@
+AGROFEDVISION
+===============================
+Adaptive Nutrient Report
+
+Healthy      : 23.80%
+Nitrogen     : 10.50%
+Phosphorus   : 14.50%
+Potassium    : 51.20%
+
+Recommendations
+-----------------
+- Increase Nitrogen fertilizer (Urea)
+- Increase Phosphorus fertilizer (DAP)
+- Increase Potassium fertilizer (MOP)
+
+Adaptive thresholds
+Healthy NDVI : 0.4834
+Healthy NDRE : 0.1028
+Low NDVI     : 0.2838
+Low NDRE     : -0.2132

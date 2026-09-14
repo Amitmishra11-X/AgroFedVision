@@ -1,0 +1,16 @@
+{
+    "accuracy": 0.7254902124404907,
+    "loss": 0.6871833801269531,
+    "epochs": 24,
+    "features": [
+        "NDVI_Mean",
+        "NDVI_Std",
+        "NDRE_Mean",
+        "NDRE_Std"
+    ],
+    "classes": [
+        "Healthy",
+        "High_Risk",
+        "Moderate_Risk"
+    ]
+}

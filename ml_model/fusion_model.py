@@ -14,8 +14,8 @@ import numpy as np
 import tensorflow as tf
 from tensorflow.keras import layers
 
-from agrofedvision.models.sensor_transformer import build_sensor_transformer
-from agrofedvision.models.image_encoder import build_image_encoder
+from sensor_transformer import build_sensor_transformer
+from image_encoder import build_image_encoder
 
 # ==========================================================
 # BUILD MODEL

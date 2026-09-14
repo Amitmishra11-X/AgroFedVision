@@ -1,0 +1,12 @@
+{
+    "Validation Accuracy": 0.686274528503418,
+    "Validation Loss": 0.7044551372528076,
+    "Epochs": 28,
+    "Sensor Features": 22,
+    "UAV Features": 4,
+    "Classes": [
+        "Healthy",
+        "High_Risk",
+        "Moderate_Risk"
+    ]
+}

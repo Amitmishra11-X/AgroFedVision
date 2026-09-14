@@ -1,0 +1,51 @@
+============================================================
+SENSOR RELIABILITY REPORT
+============================================================
+
+Overall Dataset Quality : 0.909
+Overall Status : Good
+
+------------------------------------------------------------
+FEATURE RELIABILITY
+------------------------------------------------------------
+
+co2_concentration        98.60%   Excellent
+ph                       97.00%   Excellent
+sunlight_exposure        95.30%   Excellent
+temperature              95.10%   Excellent
+soil_moisture            94.20%   Good
+humidity                 93.40%   Good
+fertilizer_usage         93.10%   Good
+crop_density             93.00%   Good
+water_usage_efficiency   92.40%   Good
+water_source_type        91.90%   Good
+growth_stage             91.80%   Good
+soil_type                91.80%   Good
+organic_matter           90.50%   Good
+irrigation_frequency     90.30%   Good
+wind_speed               88.70%   Good
+frost_risk               88.60%   Good
+pest_pressure            88.40%   Good
+urban_area_proximity     88.30%   Good
+rainfall                 88.20%   Good
+P                        86.10%   Good
+N                        85.40%   Good
+K                        77.70%   Moderate
+
+------------------------------------------------------------
+TOP RELIABLE SENSORS
+------------------------------------------------------------
+1. co2_concentration (98.60%)
+2. ph (97.00%)
+3. sunlight_exposure (95.30%)
+4. temperature (95.10%)
+5. soil_moisture (94.20%)
+
+------------------------------------------------------------
+NEEDS ATTENTION
+------------------------------------------------------------
+1. urban_area_proximity (88.30%)
+2. rainfall (88.20%)
+3. P (86.10%)
+4. N (85.40%)
+5. K (77.70%)

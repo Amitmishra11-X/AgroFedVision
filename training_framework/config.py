@@ -63,7 +63,7 @@ DATASETS = {
 
         "models": [
 
-            "densenet",
+            "vgg16"  ,
 
 
 
@@ -109,8 +109,8 @@ DATASETS = {
 
         "valid": None,
 
-        "test": r"D:\Download1\archive\paddy-disease-classification\test_images",
-
+        "test": None,
+        
         "num_classes": 10,
 
         "image_size": 224,

@@ -323,6 +323,33 @@ def main():
                 training_time=training_time
 
             )
+            # ==================================================
+            # Free Memory Before Next Model
+            # ==================================================
+
+            import gc
+            import tensorflow as tf
+
+            print()
+            print("=" * 60)
+            print("Clearing TensorFlow Memory")
+            print("=" * 60)
+
+            del trainer00 
+            del model
+            del train_ds
+
+            if val_ds is not None:
+                del val_ds
+
+            if test_ds is not None:
+                del test_ds
+
+            tf.keras.backend.clear_session()
+            gc.collect()
+
+            print("Memory Cleared")
+            print("=" * 60)
 
             # Save benchmark after every model
 

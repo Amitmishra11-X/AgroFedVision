@@ -1,0 +1,10 @@
+{
+    "accuracy": 0.7777777910232544,
+    "loss": 0.6865436434745789,
+    "epochs": 33,
+    "classes": [
+        "Healthy",
+        "High_Risk",
+        "Moderate_Risk"
+    ]
+}

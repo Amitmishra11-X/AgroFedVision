@@ -1,17 +1,19 @@
-"""
-============================================================
-AgroFedVision Explainable AI Engine
-Author : Amit Mishra
-============================================================
-"""
-
 from datetime import datetime
 
 
 class ExplainableFusion:
 
     def __init__(self):
+
         self.modules = []
+
+        # SHAP explanation for structured
+        # sensor + UAV inputs
+        self.shap_explanation = None
+
+    # ======================================================
+    # Add Explainability Module
+    # ======================================================
 
     def add_module(
         self,
@@ -24,13 +26,35 @@ class ExplainableFusion:
     ):
 
         self.modules.append({
+
             "module": name,
+
             "score": score,
+
             "confidence": confidence,
+
             "summary": summary,
+
             "evidence": evidence or {},
+
             "recommendation": recommendation
+
         })
+
+    # ======================================================
+    # Add SHAP Explanation
+    # ======================================================
+
+    def add_shap_explanation(
+        self,
+        shap_result
+    ):
+
+        self.shap_explanation = shap_result
+
+    # ======================================================
+    # Generate Final Explainability Report
+    # ======================================================
 
     def generate(
         self,
@@ -41,15 +65,26 @@ class ExplainableFusion:
 
         report = {
 
-            "timestamp": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+            "timestamp":
+                datetime.now().strftime(
+                    "%Y-%m-%d %H:%M:%S"
+                ),
 
-            "overall_status": overall_status,
+            "overall_status":
+                overall_status,
 
-            "risk_level": risk_level,
+            "risk_level":
+                risk_level,
 
-            "health_score": health_score,
+            "health_score":
+                health_score,
 
-            "modules": self.modules
+            "modules":
+                self.modules,
+
+            "shap_explanation":
+                self.shap_explanation
+
         }
 
         return report

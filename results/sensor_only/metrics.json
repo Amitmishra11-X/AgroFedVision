@@ -1,0 +1,11 @@
+{
+    "accuracy": 0.41830065846443176,
+    "loss": 1.1334701776504517,
+    "epochs": 14,
+    "num_sensor_features": 22,
+    "classes": [
+        "Healthy",
+        "High_Risk",
+        "Moderate_Risk"
+    ]
+}
